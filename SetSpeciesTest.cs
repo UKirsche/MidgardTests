@@ -29,7 +29,7 @@ using NUnit.Framework;
 /// 	* Spitzbube (Sp)
 /// 	* Waldläufer (Wa)
 /// 
-/// Zauberkundige Kämpfer
+/// Zauberku	ndige Kämpfer
 /// 	* Barde (Ba)
 /// 	* Ordenskrieger (Or)
 /// 	* Tiermeister (Tm)
@@ -53,12 +53,26 @@ using NUnit.Framework;
 [TestFixture]
 public class SetSpeciesTest
 {
+	private readonly int _ANZAHLRASSEN;
+	//
+	private readonly int _ANZAHL_ABENTEUERERTYPEN_PRO_MENSCH; 
+	private readonly int _ANZAHL_ABENTEUERERTYPEN_PRO_ELF;	 
+	private readonly int _ANZAHL_ABENTEUERERTYPEN_PRO_BERGGNOM;
+	private readonly int _ANZAHL_ABENTEUERERTYPEN_PRO_WALDGNOM;
+	private readonly int _ANZAHL_ABENTEUERERTYPEN_PRO_HALBLING;
+	private readonly int _ANZAHL_ABENTEUERERTYPEN_PRO_ZWERG;
 
 	private MidgardCharakter _mCharacter;
 
 	public SetSpeciesTest(){
-
 		_mCharacter = new MidgardCharakter ();
+		this._ANZAHLRASSEN = 6;
+		this._ANZAHL_ABENTEUERERTYPEN_PRO_MENSCH = 30;
+		this._ANZAHL_ABENTEUERERTYPEN_PRO_ELF = 8;
+		this._ANZAHL_ABENTEUERERTYPEN_PRO_BERGGNOM = 9;
+		this._ANZAHL_ABENTEUERERTYPEN_PRO_WALDGNOM = this._ANZAHL_ABENTEUERERTYPEN_PRO_BERGGNOM;
+		this._ANZAHL_ABENTEUERERTYPEN_PRO_HALBLING = 7;
+		this._ANZAHL_ABENTEUERERTYPEN_PRO_ZWERG = 9;
 	}
 
 	/// <summary>
@@ -66,23 +80,22 @@ public class SetSpeciesTest
 	/// </summary>
 	[Test]
 	public void GetNumberRassenTest(){
-		const int _NUMBERRASSEN = 6;
 		Rassen midgardRassen = MidgardResourceReader.GetMidgardResource<Rassen> (MidgardResourceReader.MidgardRassen);
-		Assert.AreEqual (_NUMBERRASSEN, midgardRassen.rassenListe.Count);
+		Assert.AreEqual (this._ANZAHLRASSEN, midgardRassen.rassenListe.Count);
 	}
 
 
 	[Test]
 	/// <summary>
-	/// Test Rasse Mensch. Ermöglicht 30 Abenteurertypen. Test auf  enthaltenen Assassinen, Barbar und Ordenskrieger
+	/// Test Rasse Mensch. Ermöglicht 30 Abenteurertypen. 
+	/// Test auf  enthaltenen Assassinen, Barbar und Ordenskrieger
 	/// </summary>
 	public void SetSpeciesMenschTest ()
 	{
-		const int _NUMBERABENTEURERTYPEN = 30;
 		_mCharacter.Spezies = Races.Mensch;
 		int raceId = (int) _mCharacter.Spezies + 1;
 		List<AbenteurerTyp> listeTypen = ObjectXMLHelper.GetMidgardObjectAByIndexB<AbenteurerTyp, RasseRef>(MidgardResourceReader.GetMidgardResource<AbenteurerTypen> (MidgardResourceReader.MidgardAbenteurerTypen).listAbenteurerTypen, raceId);
-		Assert.AreEqual (_NUMBERABENTEURERTYPEN, listeTypen.Count);
+		Assert.AreEqual (_ANZAHL_ABENTEUERERTYPEN_PRO_MENSCH, listeTypen.Count);
 
 		var assassine = listeTypen [0];
 		StringAssert.AreEqualIgnoringCase ("assassine", assassine.name);
@@ -96,69 +109,78 @@ public class SetSpeciesTest
 
 
 	[Test]
+	/// <summary>
+	/// Rasse Elf, 8 ATypen. Stichprobe auf 3
+	/// </summary>
 	public void SetSpeciesElfTest ()
 	{
-		const int _NUMBERABENTEURERTYPEN = 8;
 		_mCharacter.Spezies = Races.Elf;
-		int raceId = (int) _mCharacter.Spezies + 1;
-		List<AbenteurerTyp> listeTypen = ObjectXMLHelper.GetMidgardObjectAByIndexB<AbenteurerTyp, RasseRef>(MidgardResourceReader.GetMidgardResource<AbenteurerTypen> (MidgardResourceReader.MidgardAbenteurerTypen).listAbenteurerTypen, raceId);
-		Assert.AreEqual (_NUMBERABENTEURERTYPEN, listeTypen.Count);
+		int raceIdElf = (int) _mCharacter.Spezies + 1;
+		List<AbenteurerTyp> listeAbenteuererTypenElf = ObjectXMLHelper.GetMidgardObjectAByIndexB<AbenteurerTyp, RasseRef>(MidgardResourceReader.GetMidgardResource<AbenteurerTypen> (MidgardResourceReader.MidgardAbenteurerTypen).listAbenteurerTypen, raceIdElf);
+		Assert.AreEqual (_ANZAHL_ABENTEUERERTYPEN_PRO_ELF, listeAbenteuererTypenElf.Count);
 
-		var glücksritter = listeTypen [0];
+		var glücksritter = listeAbenteuererTypenElf [0];
 		StringAssert.AreEqualIgnoringCase ("glücksritter", glücksritter.name);
 
-		var krieger = listeTypen [1];
+		var krieger = listeAbenteuererTypenElf [1];
 		StringAssert.AreEqualIgnoringCase ("krieger", krieger.name);
 
-		var magier = listeTypen [7];
+		var magier = listeAbenteuererTypenElf [7];
 		StringAssert.AreEqualIgnoringCase ("magier", magier.name);
 	}
 
 
 	[Test]
+	/// <summary>
+	/// Rasse Berggnom, 9 ATypen. Stichprobe auf 3
+	/// </summary>
 	public void SetSpeciesBerggnomTest ()
 	{
-		const int _NUMBERABENTEURERTYPEN = 9;
 		_mCharacter.Spezies = Races.Berggnom;
-		int raceId = (int) _mCharacter.Spezies + 1;
-		List<AbenteurerTyp> listeTypen = ObjectXMLHelper.GetMidgardObjectAByIndexB<AbenteurerTyp, RasseRef>(MidgardResourceReader.GetMidgardResource<AbenteurerTypen> (MidgardResourceReader.MidgardAbenteurerTypen).listAbenteurerTypen, raceId);
-		Assert.AreEqual (_NUMBERABENTEURERTYPEN, listeTypen.Count);
+		int raceIdBerggnom = (int) _mCharacter.Spezies + 1;
+		List<AbenteurerTyp> listeTypenBerggnom = ObjectXMLHelper.GetMidgardObjectAByIndexB<AbenteurerTyp, RasseRef>(MidgardResourceReader.GetMidgardResource<AbenteurerTypen> (MidgardResourceReader.MidgardAbenteurerTypen).listAbenteurerTypen, raceIdBerggnom);
+		Assert.AreEqual (_ANZAHL_ABENTEUERERTYPEN_PRO_BERGGNOM, listeTypenBerggnom.Count);
 
-		var spitzi = listeTypen [2];
+		var spitzi = listeTypenBerggnom [2];
 		StringAssert.AreEqualIgnoringCase ("spitzbube", spitzi.name);
 
-		var waldi = listeTypen [3];
+		var waldi = listeTypenBerggnom [3];
 		StringAssert.AreEqualIgnoringCase ("waldläufer", waldi.name);
 
 	}
 
 	[Test]
+	/// <summary>
+	/// Anzahl Abenteurertypen Elf: 9, Stichprobe 3
+	/// </summary>
 	public void SetSpeciesWaldgnomTest ()
 	{
 		const int _NUMBERABENTEURERTYPEN = 9;
 		_mCharacter.Spezies = Races.Waldgnom;
-		int raceId = (int) _mCharacter.Spezies + 1;
-		List<AbenteurerTyp> listeTypen = ObjectXMLHelper.GetMidgardObjectAByIndexB<AbenteurerTyp, RasseRef>(MidgardResourceReader.GetMidgardResource<AbenteurerTypen> (MidgardResourceReader.MidgardAbenteurerTypen).listAbenteurerTypen, raceId);
-		Assert.AreEqual (_NUMBERABENTEURERTYPEN, listeTypen.Count);
+		int raceIdWaldgnom = (int) _mCharacter.Spezies + 1;
+		List<AbenteurerTyp> listeTypenWaldgnom = ObjectXMLHelper.GetMidgardObjectAByIndexB<AbenteurerTyp, RasseRef>(MidgardResourceReader.GetMidgardResource<AbenteurerTypen> (MidgardResourceReader.MidgardAbenteurerTypen).listAbenteurerTypen, raceIdWaldgnom);
+		Assert.AreEqual (_NUMBERABENTEURERTYPEN, listeTypenWaldgnom.Count);
 
-		var spitzi = listeTypen [2];
+		var spitzi = listeTypenWaldgnom [2];
 		StringAssert.AreEqualIgnoringCase ("spitzbube", spitzi.name);
 
-		var waldi = listeTypen [3];
+		var waldi = listeTypenWaldgnom [3];
 		StringAssert.AreEqualIgnoringCase ("waldläufer", waldi.name);
 
 	}
 
 	[Test]
+	/// <summary>
+	/// Anzahl Abenteurertypen Halbling:7, Stichprobe 1
+	/// </summary>
 	public void SetSpeciesHalblingTest ()
 	{
-		const int _NUMBERABENTEURERTYPEN = 7;
 		_mCharacter.Spezies = Races.Halbling;
-		int raceId = (int) _mCharacter.Spezies + 1;
-		List<AbenteurerTyp> listeTypen = ObjectXMLHelper.GetMidgardObjectAByIndexB<AbenteurerTyp, RasseRef>(MidgardResourceReader.GetMidgardResource<AbenteurerTypen> (MidgardResourceReader.MidgardAbenteurerTypen).listAbenteurerTypen, raceId);
-		Assert.AreEqual (_NUMBERABENTEURERTYPEN, listeTypen.Count);
+		int raceIdHalbling = (int) _mCharacter.Spezies + 1;
+		List<AbenteurerTyp> listeTypenHalblinge = ObjectXMLHelper.GetMidgardObjectAByIndexB<AbenteurerTyp, RasseRef>(MidgardResourceReader.GetMidgardResource<AbenteurerTypen> (MidgardResourceReader.MidgardAbenteurerTypen).listAbenteurerTypen, raceIdHalbling);
+		Assert.AreEqual (_ANZAHL_ABENTEUERERTYPEN_PRO_HALBLING, listeTypenHalblinge.Count);
 
-		var waldi = listeTypen [2];
+		var waldi = listeTypenHalblinge [2];
 		StringAssert.AreEqualIgnoringCase ("waldläufer", waldi.name);
 
 	}
@@ -166,13 +188,12 @@ public class SetSpeciesTest
 	[Test]
 	public void SetSpeciesZwergTest ()
 	{
-		const int _NUMBERABENTEURERTYPEN = 9;
 		_mCharacter.Spezies = Races.Zwerg;
-		int raceId = (int) _mCharacter.Spezies + 1;
-		List<AbenteurerTyp> listeTypen = ObjectXMLHelper.GetMidgardObjectAByIndexB<AbenteurerTyp, RasseRef>(MidgardResourceReader.GetMidgardResource<AbenteurerTypen> (MidgardResourceReader.MidgardAbenteurerTypen).listAbenteurerTypen, raceId);
-		Assert.AreEqual (_NUMBERABENTEURERTYPEN, listeTypen.Count);
+		int raceIdZwerg = (int) _mCharacter.Spezies + 1;
+		List<AbenteurerTyp> listeTypenZwerg = ObjectXMLHelper.GetMidgardObjectAByIndexB<AbenteurerTyp, RasseRef>(MidgardResourceReader.GetMidgardResource<AbenteurerTypen> (MidgardResourceReader.MidgardAbenteurerTypen).listAbenteurerTypen, raceIdZwerg);
+		Assert.AreEqual (_ANZAHL_ABENTEUERERTYPEN_PRO_ZWERG, listeTypenZwerg.Count);
 
-		var beschwoerer = listeTypen [3];
+		var beschwoerer = listeTypenZwerg [3];
 		StringAssert.AreEqualIgnoringCase ("beschwörer", beschwoerer.name);
 	}
 
