@@ -3,8 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 
+/// <summary>
+/// Umfasst folgende Fälle:
+/// 
+/// </summary>
 [TestFixture]
-public class DialogParserTest 
+public class DialogParserFertigkeitTest 
 {
 
 	private NPCS midgardNPCS;
@@ -12,7 +16,7 @@ public class DialogParserTest
 	private NPCS midgardNPCSorig;
 
 
-	public DialogParserTest(){
+	public DialogParserFertigkeitTest(){
 
 		midgardNPCSorig = SceneResourceReader.GetMidgardResource<NPCS> (SceneResourceReader.MidgardNPC);
 		midgardNPCS = SceneResourceReader.GetMidgardResource<NPCS> (SceneResourceReader.MidgardNPCTest);
